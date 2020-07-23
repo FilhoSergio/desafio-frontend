@@ -17,7 +17,9 @@
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
             <a class="text-white" href="/cartcheckout">
-              Your Cart
+              <v-badge color="red" content="6" overlap>
+                Yor Cart
+              </v-badge>
             </a></v-toolbar-title
           >
           <v-spacer></v-spacer>
@@ -84,7 +86,7 @@
               :unitPrice="product.unitPrice"
               :productID="product.productID"
             ></Product-Card>
-          </v-col> 
+          </v-col>
         </v-row>
         <v-row v-else>
           <v-col sm12 md12>
@@ -95,14 +97,11 @@
               item-key="productID"
               class="elevation-1"
             >
-              
-              <template >
+              <template>
                 <v-icon small class="mr-2" @click="addProductsToCart(products)">
                   mdi-pencil
                 </v-icon>
-                
               </template>
-           
             </v-data-table>
           </v-col>
         </v-row>
@@ -144,8 +143,7 @@ export default {
     await this.getProducts();
   },
   computed: {
-    ...mapState(["Products", "cart", "Search"]),
-    
+    ...mapState(["Products", "productsToCart", "Search"]),
   },
   methods: {
     ...mapActions(["getProducts", "searchCard", "addProductsToCart"]),
