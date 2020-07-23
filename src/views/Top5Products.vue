@@ -20,7 +20,11 @@
 
     <v-main>
       <v-container>
-     
+        <v-row>
+            <v-col>
+               <h1> Top 5 products </h1>
+            </v-col>
+        </v-row>
         
       </v-container>
     </v-main>

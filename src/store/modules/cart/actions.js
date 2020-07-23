@@ -2,12 +2,12 @@
 
 
 export default {
-    async addProductsToCart({ state ,commit }, cart) {
+    async addProductsToCart({ state ,commit }, productsToCart) {
      
-     console.log("aqui eu ", cart)
+     console.log("aqui eu ", productsToCart)
 
-      commit("setProductsToCart", cart);
-
+      commit("setProductsToCart", productsToCart);
+    //   this.state.productsToCart.dispacht(cart)
       console.log(state.productsToCart)
     //   console.log(state.productsToCart.push(cart))
 

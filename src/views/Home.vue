@@ -17,7 +17,7 @@
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
             <a class="text-white" href="/cartcheckout">
-              <v-badge color="red" content="6" overlap>
+              <v-badge color="red" content="6" overlap bordered bottom>
                 Yor Cart
               </v-badge>
             </a></v-toolbar-title
@@ -33,7 +33,7 @@
           <v-col sm12 md12>
             <v-toolbar class="elevation-0 transparent media-toolbar">
               <v-btn-toggle>
-                <v-card-text>
+               
                   <v-autocomplete
                     v-model="Search.search_card"
                     @keyup="searchCard(Search.search_card)"
@@ -44,7 +44,7 @@
                     hide-selected
                     item-text="name"
                     item-value="productID"
-                    autofocus
+                  
                     dense
                     filled
                     clearable
@@ -52,8 +52,9 @@
                     placeholder="Start typing to Search"
                     prepend-icon="mdi-account-search"
                     style="width: 340px;"
+                    class="m-t-16"
                   ></v-autocomplete>
-                </v-card-text>
+              
               </v-btn-toggle>
               <v-spacer></v-spacer>
               <v-btn-toggle v-model="view">
@@ -97,10 +98,12 @@
               item-key="productID"
               class="elevation-1"
             >
-              <template>
-                <v-icon small class="mr-2" @click="addProductsToCart(products)">
-                  mdi-pencil
-                </v-icon>
+              <template v-slot:item.add="{ item }">
+                <div class="my-2">
+                  <v-btn x-small color="green" @click="addProductsToCart(item)" dark><v-icon > mdi-plus </v-icon></v-btn>
+                </div>
+                
+               
               </template>
             </v-data-table>
           </v-col>
@@ -153,5 +156,8 @@ export default {
 <style>
 .text-white {
   color: white !important;
+}
+.m-t-16 {
+  margin-top: 16px !important;
 }
 </style>

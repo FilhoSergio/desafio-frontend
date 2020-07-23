@@ -1,13 +1,15 @@
 export default {
-    setProductsToCart(state, cart) {
+    setProductsToCart(state, productsToCart) {
      
-      if(cart){
+      if(productsToCart){
    
-        state.productsToCart = cart
+        state.productsToCart.push( productsToCart)
+        console.log("epaaaaa" , productsToCart , state.productsToCart.length)
+        // state.productsToCart.dis
       }
       else {
-  
-        state.cart = []
+        console.log("uhuhuh")
+        state.productsToCart = []
       }
     },
    

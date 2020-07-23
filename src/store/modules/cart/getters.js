@@ -1,4 +1,4 @@
 export default {
-    addProductsToCart: state => state.cart,
+    addProductsToCart: state => state.productsToCart,
    
   }
