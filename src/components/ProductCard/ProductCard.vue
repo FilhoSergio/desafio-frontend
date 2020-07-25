@@ -12,7 +12,7 @@
       <v-divider class="mx-4"></v-divider>
 
       <br />
-      <h2>Price : {{ unitPrice }}$</h2>
+      <h2>Price : {{ unitPrice | currency }}</h2>
       <h4>Items let in stock : {{ unitsInStock }}</h4>
 
       <v-card-actions>
@@ -24,7 +24,7 @@
           small
           dark
           @click="
-            addProductsToCart({
+            AddProducts({
               image,
               name,
               description,
@@ -36,6 +36,7 @@
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
+        
       </v-card-actions>
     </v-card-text>
   </v-card>
@@ -57,11 +58,17 @@ export default {
     ...mapState(["cart"]),
   },
   methods: {
-    ...mapActions(["addProductsToCart"]),
-    // AddItem(product){
-    //   // this.$store.dispatch('cart', product)
-    //   // this.$state.cart.Push(product)
-    // }
+    ...mapActions(["addProductsToCart", "removeProductsToCart"]),
+  
+   async AddProducts(product){
+     this.addProductsToCart(product)
+
+    },
+
+    async RemoveProducts(product){
+      this.removeProductsToCart(product)
+
+    }
   },
 };
 </script>

@@ -4,24 +4,35 @@
       <v-row>
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
-            <a class="text-white" href="/"> Home </a>
+            <router-link to="/" class="text-white">
+              Home
+            </router-link>
           </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-col>
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
-            <a class="text-white" href="/top5"> Top 5 products </a>
+            <router-link to="/top5" class="text-white">
+              Top 5 products
+            </router-link>
           </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-col>
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
-            <a class="text-white" href="/cartcheckout">
-              <v-badge color="red" content="6" overlap bordered bottom>
-                Yor Cart
+            <router-link to="/cartcheckout">
+              <span class="text-white"> Yor Cart </span>
+              <v-badge
+                v-if="Cart.productsToCart.length"
+                color="red"
+                :content="Cart.productsToCart.length"
+                overlap
+                bordered
+                bottom
+              >
               </v-badge>
-            </a></v-toolbar-title
-          >
+            </router-link>
+          </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-col>
       </v-row>
@@ -33,31 +44,28 @@
           <v-col sm12 md12>
             <v-toolbar class="elevation-0 transparent media-toolbar">
               <v-btn-toggle>
-               
-                  <v-autocomplete
-                    v-model="Search.search_card"
-                    @keyup="searchCard(Search.search_card)"
-                    :items="Products.products"
-                    :search-input.sync="search"
-                    color="#424242"
-                    hide-no-data
-                    hide-selected
-                    item-text="name"
-                    item-value="productID"
-                  
-                    dense
-                    filled
-                    clearable
-                    label="Search products"
-                    placeholder="Start typing to Search"
-                    prepend-icon="mdi-account-search"
-                    style="width: 340px;"
-                    class="m-t-16"
-                  ></v-autocomplete>
-              
+                <v-autocomplete
+                  v-model="search"
+                  :items="Products.products"
+                  :search-input.sync="search"
+                  color="#424242"
+                  hide-no-data
+                  hide-selected
+                  item-text="name"
+                  item-value="productID"
+                  dense
+                  filled
+                  return-object
+                  clearable
+                  label="Search products"
+                  placeholder="Start typing to Search"
+                  prepend-icon="mdi-account-search"
+                  style="width: 340px;"
+                  class="m-t-16"
+                ></v-autocomplete>
               </v-btn-toggle>
               <v-spacer></v-spacer>
-              <v-btn-toggle v-model="view">
+              <v-btn-toggle v-model="view" mandatory class="grid-list">
                 <v-btn flat value="grid">
                   Grid
                   <v-icon color="primary">mdi-apps</v-icon>
@@ -70,7 +78,7 @@
             </v-toolbar>
           </v-col>
         </v-row>
-        {{ productsToCart }}
+
         <v-row v-if="view === 'grid'">
           <v-col
             v-for="product in Products.products"
@@ -98,12 +106,20 @@
               item-key="productID"
               class="elevation-1"
             >
+              <template v-slot:item.unitPrice="{ item }">
+                <span>{{ item.unitPrice | currency }}</span>
+              </template>
               <template v-slot:item.add="{ item }">
                 <div class="my-2">
-                  <v-btn x-small color="green" @click="addProductsToCart(item)" dark><v-icon > mdi-plus </v-icon></v-btn>
+                  <v-btn
+                    fab
+                    x-small
+                    dark
+                    color="warning"
+                    @click="addProductsToCart(item)"
+                    ><v-icon> mdi-plus </v-icon></v-btn
+                  >
                 </div>
-                
-               
               </template>
             </v-data-table>
           </v-col>
@@ -115,9 +131,8 @@
 
 <script>
 import ProductCard from "@/components/ProductCard/ProductCard.vue";
-// import productList from "@/services/productList";
 import { mapState, mapActions } from "vuex";
-// import { filter_key_word } from "../utils"
+// import { filter_key_word } from "../utils";
 export default {
   components: {
     ProductCard,
@@ -130,7 +145,7 @@ export default {
     drawer: null,
     view: "grid",
     select: null,
-    search: null,
+    search: "",
     headers: [
       { text: "Name", value: "name" },
       { text: "Price($)", value: "unitPrice" },
@@ -139,17 +154,28 @@ export default {
     ],
   }),
   async created() {
-    // productList.get("/products").then((response) => {
-    //   console.log(response);
-    //   this.products = response.data.products;
-    // });
     await this.getProducts();
   },
   computed: {
-    ...mapState(["Products", "productsToCart", "Search"]),
+    ...mapState(["Products", "Cart", "Search"]),
+    // filteredList() {
+    //   return filter_key_word(this.Products, this.search);
+    // },
   },
   methods: {
-    ...mapActions(["getProducts", "searchCard", "addProductsToCart"]),
+    ...mapActions([
+      "getProducts",
+      "searchCard",
+      "addProductsToCart",
+      "getProdcutById",
+    ]),
+    // async filterProduct(product) {
+    //   filter_key_word(this.Products.products, this.search);
+    // },
+   
+    // getFilteredObj(product) {
+    //   this.getProdcutById(product);
+    // },
   },
 };
 </script>
@@ -159,5 +185,14 @@ export default {
 }
 .m-t-16 {
   margin-top: 16px !important;
+}
+a:link {
+  text-decoration: none;
+}
+
+@media screen and (max-width: 593px) {
+  .grid-list {
+    display: none;
+  }
 }
 </style>

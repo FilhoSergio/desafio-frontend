@@ -1,24 +1,30 @@
-# teste-tembici
+# Desafio frontend Tembici
 
-## Project setup
+Aplicação web que simula um processo de compra  criado com Vuejs + Vuex.
+
+## Pré requisitos do sistema
+* Node.js
+* NPM
+
+## Configuração e instalação de dependências do projeto
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Executanto o projeto
 ```
 npm run serve
 ```
+Rodando em http://localhost:8080
 
-### Compiles and minifies for production
+### Executando o projeto em modo de produção
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### Lints 
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+

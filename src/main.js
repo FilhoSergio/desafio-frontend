@@ -7,6 +7,11 @@ import "font-awesome/css/font-awesome.css";
 import router from './router'
 Vue.config.productionTip = false
 
+
+Vue.filter("currency", function(value) {
+  return "$ " + parseFloat(value).toFixed(2);
+});
+
 new Vue({
   vuetify,
   store,

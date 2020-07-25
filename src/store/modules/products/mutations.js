@@ -10,6 +10,10 @@ export default {
         state.products = []
       }
     },
+
+    setProductById(state , product){
+        
+    }
    
    
     

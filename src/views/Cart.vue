@@ -4,22 +4,35 @@
       <v-row>
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
-            <a class="text-white" href="/"> Home </a>
+            <router-link to="/" class="text-white">
+              Home
+            </router-link>
           </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-col>
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
-            <a class="text-white" href="/top5"> Top 5 products </a>
+            <router-link to="/top5" class="text-white">
+              Top 5 products
+            </router-link>
           </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-col>
         <v-col sm4 md4>
           <v-toolbar-title class="text-center ">
-            <a class="text-white" href="/cartcheckout">
-              Your Cart
-            </a></v-toolbar-title
-          >
+            <router-link to="/cartcheckout">
+              <span class="text-white"> Yor Cart </span>
+              <v-badge
+                v-if="Cart.productsToCart.length"
+                color="red"
+                :content="Cart.productsToCart.length"
+                overlap
+                bordered
+                bottom
+              >
+              </v-badge>
+            </router-link>
+          </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-col>
       </v-row>
@@ -29,8 +42,8 @@
       <v-container>
         <v-row>
           <v-col sm12 md12>
-            <h1>Your Cart</h1>
-
+            <h1 >Your Cart</h1>
+          
             <div class="shopping-cart">
               <div class="column-labels">
                 <label class="product-image">Image</label>
@@ -41,93 +54,68 @@
                 <label class="product-line-price">Total</label>
               </div>
 
-              <div class="product">
+              <div
+                class="product"
+                v-for="product in Cart.productsToCart"
+                :key="product.productID"
+              >
                 <div class="product-image">
-                  <img src="https://s.cdpn.io/3/dingo-dog-bones.jpg" />
+                  <img :src="product.image" />
                 </div>
                 <div class="product-details">
-                  <div class="product-title">Dingo Dog Bones</div>
+                  <div class="product-title">{{ product.name }}</div>
                   <p class="product-description">
-                    The best dog bones of all time. Holy crap. Your dog will be
-                    begging for these things! I got curious once and ate one
-                    myself. I'm a fan.
+                    {{ product.description }}
                   </p>
                 </div>
-                <div class="product-price">12.99</div>
-                <div class="product-quantity">
-                  <input type="number" value="2" min="1" />
+                <div class="product-price">
+                  {{ product.unitPrice | currency }}
                 </div>
-                <div class="product-removal">
-                  <button class="remove-product">
-                    Remove
-                  </button>
-                </div>
-                <div class="product-line-price">25.98</div>
-              </div>
-
-              <div class="product">
-                <div class="product-image">
-                  <img
-                    src="https://s.cdpn.io/3/large-NutroNaturalChoiceAdultLambMealandRiceDryDogFood.png"
-                  />
-                </div>
-                <div class="product-details">
-                  <div class="product-title">
-                    Nutro™ Adult Lamb and Rice Dog Food
-                  </div>
-                  <p class="product-description">
-                    Who doesn't like lamb and rice? We've all hit the halal cart
-                    at 3am while quasi-blackout after a night of binge drinking
-                    in Manhattan. Now it's your dog's turn!
-                  </p>
-                </div>
-                <div class="product-price">45.99</div>
                 <div class="product-quantity">
                   <input type="number" value="1" min="1" />
                 </div>
                 <div class="product-removal">
-                  <button class="remove-product">
+                  <v-btn
+                    color="error"
+                    class="remove-product"
+                    @click="RemoveProducts(product)"
+                  >
                     Remove
-                  </button>
+                  </v-btn>
                 </div>
-                <div class="product-line-price">45.99</div>
+                <div class="product-line-price">25.98</div>
               </div>
 
               <div class="totals">
                 <div class="totals-item">
                   <label>Subtotal</label>
-                  <div class="totals-value" id="cart-subtotal">71.97</div>
+                  <div class="totals-value" id="cart-subtotal">
+                      {{ Cart.TotalPrice | currency }}
+                  </div>
                 </div>
-                <div class="totals-item">
-                  <label>Tax (5%)</label>
-                  <div class="totals-value" id="cart-tax">3.60</div>
-                </div>
-                <div class="totals-item">
-                  <label>Shipping</label>
-                  <div class="totals-value" id="cart-shipping">15.00</div>
-                </div>
+
                 <div class="totals-item totals-item-total">
                   <label>Grand Total</label>
-                  <div class="totals-value" id="cart-total">90.57</div>
+                  <div class="totals-value" id="cart-total">
+                      {{ Cart.TotalPrice | currency }}
+                  </div>
                 </div>
               </div>
 
-              <button class="checkout">Checkout</button>
+              <button class="checkout" >Checkout</button>
             </div>
           </v-col>
         </v-row>
-        <!-- <v-container class="fill-height" fluid> -->
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   components: {},
-  props: {
-    source: String,
-  },
+  props: {},
 
   data: () => ({
     drawer: null,
@@ -136,8 +124,26 @@ export default {
     search: null,
   }),
   created() {},
-  computed: {},
-  methods: {},
+  computed: {
+    ...mapState(["Cart"]),
+  },
+  methods: {
+    ...mapActions([
+      "addProductsToCart",
+      "removeProductsToCart",
+      "getPriceTotal",
+    ]),
+    async AdicionarProducts(product) {
+      this.addProductsToCart(product);
+    },
+
+    async RemoveProducts(product) {
+      this.removeProductsToCart(product);
+    },
+    async GetPrice() {
+      this.getPriceTotal();
+    },
+  },
 };
 </script>
 <style scoped>
@@ -198,26 +204,13 @@ export default {
 .totals-item {
   zoom: 1;
 }
-/* Apply clearfix in a few places */
-/* Apply dollar signs */
-.product .product-price:before,
-.product .product-line-price:before,
-.totals-value:before {
-  content: "$";
-}
+
 /* Body/Header stuff */
 body {
   padding: 0px 30px 30px 20px;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
-    Helvetica, Arial, sans-serif;
-  font-weight: 100;
 }
-h1 {
-  font-weight: 100;
-}
-label {
-  color: #aaa;
-}
+
+
 .shopping-cart {
   margin-top: -45px;
 }
@@ -246,7 +239,6 @@ label {
 }
 .product .product-details .product-title {
   margin-right: 20px;
-  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
 }
 .product .product-details .product-description {
   margin: 5px 20px 5px 0;
@@ -260,7 +252,7 @@ label {
   padding: 4px 8px;
   background-color: #c66;
   color: #fff;
-  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
+
   font-size: 12px;
   border-radius: 3px;
 }
@@ -285,9 +277,7 @@ label {
   width: 21%;
   text-align: right;
 }
-.totals .totals-item-total {
-  font-family: "HelveticaNeue-Medium", "Helvetica Neue Medium";
-}
+
 .checkout {
   float: right;
   border: 0;
